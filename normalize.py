@@ -1,32 +1,55 @@
-def normalize(plays: list[tuple[int, int]], 
-        responses: list[tuple[int, int]], extremes: tuple[int, int]):
-    normal: list[tuple[int, list[int]]] = []
+from dataclasses import dataclass
+
+def get_extremes(extremes: tuple[int, int], tile: tuple[int, int]):
+    side = 0
+
+    if extremes[0] == tile[0]:
+        new_extremes = (tile[1], extremes[1])
+    elif extremes[0] == tile[1]:
+        new_extremes = (tile[0], extremes[1])
+    elif extremes[1] == tile[0]:
+        new_extremes = (tile[1], extremes[0])
+        side = 1
+    elif extremes[1] == tile[1]:
+        new_extremes = (tile[0], extremes[0])
+        side = 1
+
+    return new_extremes, side
+
+@dataclass
+class Normal:
+    tile: tuple[int, int]
+    side: 0 | 1
+    responses: list[tuple[int, int]]
+
+    @property
+    def score(self):
+        if self.tile == None:
+            return -1
+        return self.tile[0] + self.tile[1]
     
-    open("normal.local.txt", "w").close()
-    file = open("normal.local.txt", "a")
+    @property
+    def response_sums(self):
+        return [response[0] + response[1] for response in self.responses]
 
-    for play in plays:
-        normal.append((play, (play[0] + play[1]), []))
-        
-        new_extremes = extremes
+def normalize(plays: list[tuple[int, int]], 
+        responses: list[tuple[int, int]], extremes: tuple[int, int]) -> list[Normal]:
+    normals: list[Normal] = []
+    
+    if len(plays) <= 0:
+        possible_responses = [response for response in responses 
+                              if response[0] in extremes
+                              or response[1] in extremes]
 
-        if extremes[0] == play[0]:
-            new_extremes = (play[1], extremes[1])
-        elif extremes[0] == play[1]:
-            new_extremes = (play[0], extremes[1])
-        elif extremes[1] == play[0]:
-            new_extremes = (play[1], extremes[0])
-        elif extremes[1] == play[1]:
-            new_extremes = (play[0], extremes[0])
+        normals.append(Normal(None, 0, possible_responses))
+
+    for tile in plays:
+        new_extremes, side = get_extremes(extremes, tile)
 
         possible_responses = [response for response in responses 
                               if response[0] in new_extremes 
                               or response[1] in new_extremes]
 
-        for response in possible_responses:
-            normal[-1][2].append(response[0] + response[1])
+        normals.append(Normal(tile, side, possible_responses))
 
-        file.write(" ".join([str(value) for value in normal[-1]]) + "\n")
-
-    file.close()
-    return normal
+    return normals
