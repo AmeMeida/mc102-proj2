@@ -28,7 +28,8 @@ def isolate_doubles(normals: list[Normal]):
     return normals
 
 def greedy(normals: list[Normal]):
-    return max(normals, key=lambda normal: normal.score)
+    high_score = max(normals, key=lambda normal: normal.score).score
+    return [normal for normal in normals if normal.score <= high_score]
 
 def most_common(tiles: list[tuple[int, int]], 
                 playable_tiles: list[Normal],

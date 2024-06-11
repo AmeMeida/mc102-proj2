@@ -29,8 +29,16 @@ class Normal:
         return self.tile[0] + self.tile[1]
     
     @property
+    def will_skip(self):
+        return len(self.responses) == 0
+
+    @property
     def response_sums(self):
+        if self.will_skip:
+            return [0]
+
         return [response[0] + response[1] for response in self.responses]
+
 
 def normalize(plays: list[tuple[int, int]], 
         responses: list[tuple[int, int]], extremes: tuple[int, int]) -> list[Normal]:
