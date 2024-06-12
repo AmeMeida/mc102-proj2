@@ -59,13 +59,14 @@ class MinMaxPlyer(Player):
         #     new_extremes = get_extremes(board_extremes, normal.tile)
         #     friend_normals = normalize(normal.responses, list(self.friend_tiles), new_extremes)
 
-        normals = s.isolate_doubles(normals)
-        normals = s.least_choices(normals)
-        normals = s.minmax(normals)
+        s.doubles(normals)
+        s.least_choices(normals)
+        s.minmax(normals)
 
-        normals = s.most_common(self.tiles, normals, board_extremes)
+        s.most_common(self.tiles, normals, board_extremes)
+        s.greedy(normals)
 
-        normals = s.greedy(normals)
+        normals = s.isolate_max_score(normals)
 
         best_play = normals[0]
         return best_play.side, best_play.tile

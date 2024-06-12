@@ -1,62 +1,60 @@
 from normalize import Normal, get_extremes
 
+weights = {
+    "choices": 7,
+    "minmax": 3,
+    "doubles": 400,
+    "greedy": 3,
+    "common": 4,
+    "pass": -800
+}
+
 def least_choices(normals: list[Normal]):
-    least_choices = min([(normal, len(normal.responses)) for normal in normals], key=lambda case: case[1])[1]
-    return [normal for normal in normals if len(normal.responses) <= least_choices]
+    for normal in normals:
+        normal += (55 - len(normal.responses)) * weights["choices"]
 
 def minmax(normals: list[Normal]):
-    maxes = [(normal, max(normal.response_sums)) for normal in normals]
-    low_score = min(maxes, key=lambda case: case[1])[1]
+    for normal in normals:
+        normal += (18 - max(normal.response_sums)) * weights["minmax"]
 
-    return [normal for (normal, score) in maxes if score <= low_score]
-
-def isolate_doubles(normals: list[Normal]):
-    has_double = False
-
-    for normal in list(normals):
-        tile = normal.tile
-        if tile == None:
-            continue
-
-        if tile[0] == tile[1]:
-            if not has_double:
-                normals = []
-                has_double = True
-
-            normals.append(normal)
-
-    return normals
+def doubles(normals: list[Normal]):
+    for normal in normals:
+        if normal.tile and normal.tile[0] == normal.tile[1]:
+            normal += weights["doubles"]
 
 def greedy(normals: list[Normal]):
-    high_score = max(normals, key=lambda normal: normal.score).score
-    return [normal for normal in normals if normal.score <= high_score]
+    for normal in normals:
+        normal += normal.score * weights["greedy"]
+
+def isolate_max_score(normals: list[Normal]):
+    best_score = max(normals, key=lambda normal: normal.score).score
+    return [normal for normal in normals if normal.score <= best_score]
+
+def may_pass(normals: list[Normal]):
+    for normal in normals:
+        if normal.tile != None:
+            continue
+
+        if len(normal.responses) != 0:
+            continue
+
+        normal += weights["pass"]
 
 def most_common(tiles: list[tuple[int, int]], 
-                playable_tiles: list[Normal],
+                normals: list[Normal],
                 extremes: tuple[int, int]):
     numbers = {}
 
     for tile in tiles:
-        numbers[tile[0]] = numbers.get(tile[0], 0)
+        numbers[tile[0]] = numbers.get(tile[0], 0) + 1
 
         if tile[0] != tile[1]:
-            numbers[tile[1]] = numbers.get(tile[1], 0)
+            numbers[tile[1]] = numbers.get(tile[1], 0) + 1
 
-    max_frequency = max(numbers.keys())
-    most_frequent = [number for number in numbers if numbers[number] >= max_frequency]
+    for normal in normals:
+        if normal.tile:
+            new_extremes, _ = get_extremes(extremes, normal.tile)
+        else:
+            new_extremes = extremes
 
-    best_normals = []
-
-    for normal in playable_tiles:
-        tile = normal.tile
-        if tile == None:
-            continue
-
-        for number in most_frequent:
-            if number in tile:
-                best_normals.append(normal)
-
-    if len(best_normals) == 0:
-        best_normals = playable_tiles
-
-    return best_normals
+        normal += (numbers.get(new_extremes[0], 0) + numbers.get(new_extremes[1], 0)) * weights["common"]
