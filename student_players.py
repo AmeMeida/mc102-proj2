@@ -64,7 +64,6 @@ class MinMaxPlyer(Player):
         normals = s.minmax(normals)
 
         normals = s.most_common(self.tiles, normals, board_extremes)
-
         normals = s.greedy(normals)
 
         best_play = normals[0]

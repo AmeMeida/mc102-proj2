@@ -21,6 +21,7 @@ class Normal:
     tile: tuple[int, int]
     side: 0 | 1
     responses: list[tuple[int, int]]
+    extremes: tuple[int, int] 
 
     @property
     def score(self):
@@ -49,7 +50,7 @@ def normalize(plays: list[tuple[int, int]],
                               if response[0] in extremes
                               or response[1] in extremes]
 
-        normals.append(Normal(None, 0, possible_responses))
+        normals.append(Normal(None, 0, possible_responses, extremes))
 
     for tile in plays:
         new_extremes, side = get_extremes(extremes, tile)
@@ -58,6 +59,6 @@ def normalize(plays: list[tuple[int, int]],
                               if response[0] in new_extremes 
                               or response[1] in new_extremes]
 
-        normals.append(Normal(tile, side, possible_responses))
+        normals.append(Normal(tile, side, possible_responses, new_extremes))
 
     return normals
