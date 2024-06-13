@@ -71,7 +71,7 @@ class Judge:
                 board_extremes = (self._board[0][0],  self._board[-1][1])
             side, tile = self._players[self._current].play(board_extremes, self._play_hist.copy())
             if tile is not None and tile in self._players_tiles[self._current] and (len(board_extremes) == 0 or tile[0] in board_extremes or tile[1] in board_extremes):
-                # print(f"---- {self._players[self._current].name} played: {tile}")
+                print(f"---- {self._players[self._current].name} played: {tile}")
                 self._players[self._current].remove_tile(tile)
                 self._players_tiles[self._current].remove(tile)
                 if len(self._players_tiles[self._current]) == 0:
