@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 
-def get_extremes(extremes: tuple[int, int], tile: tuple[int, int]):
+def get_extremes(extremes: tuple[int, int] | None, tile: tuple[int, int] | None):
     side = 0
+
+    if not tile:
+        return extremes
 
     if not extremes or len(extremes) == 0:
         return tile, side
