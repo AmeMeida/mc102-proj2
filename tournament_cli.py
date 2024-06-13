@@ -101,13 +101,11 @@ def run_match(judge, pair1, pair2, number, speed):
     first = random.randint(0, 3)
     # Executa as partidas
     for i in range(number):
-        print(f"--Initializing game: {i+1}")
+        # print(f"--Initializing game: {i+1}")
         winner = play_game(judge, players, speed, first)
-        if winner is None:
-            print(f"--Finalizing game: {i+1}. Result: tie!")
-        else:
+        if winner is not None:
             wins[winner] += 1
-            print(f"--Finalizing game: {i+1}. Result: {players[winner % 2].name + ' and ' + players[2 + winner % 2].name} WINS!")
+            # print(f"--Finalizing game: {i+1}. Result: {players[winner % 2].name + ' and ' + players[2 + winner % 2].name} WINS!")
         first = (first + 1) % 4
     return wins
     
