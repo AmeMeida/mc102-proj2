@@ -3,6 +3,9 @@ from dataclasses import dataclass
 def get_extremes(extremes: tuple[int, int], tile: tuple[int, int]):
     side = 0
 
+    if not extremes or len(extremes) == 0:
+        return tile, side
+
     if extremes[0] == tile[0]:
         new_extremes = (tile[1], extremes[1])
     elif extremes[0] == tile[1]:

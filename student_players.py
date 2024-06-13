@@ -9,21 +9,16 @@ for i in range(0, 10):
         all_tiles.add((i, j))
 
 # Implemente neste arquivo seus jogadores
-
-# Jogador que não faz nada. Subsitua esta classe pela(s) sua(s), ela(s) deve(m) herdar da classe Player
 class MinMaxPlyer(Player):
     opponent_tiles: set[tuple[int, int]]
     friend_tiles: set[tuple[int, int]]
 
-    def __init__(self):
-        self.opponent_tiles = all_tiles.copy()
-        self.friend_tiles = all_tiles.copy()
-        super().__init__(0, "Ninguém")
+    def __init__(self, ra=0, name="Ninguém", image_path="img/none.jpg"):
+        self.opponent_tiles = None
+        self.friend_tiles = None
+        super().__init__(ra, name, image_path)
 
     def play(self, board_extremes, play_hist):
-        if len(board_extremes) == 0:
-            return 0, max([(tile, tile[0] + tile[1]) for tile in self.tiles], key=lambda case: case[1])[1]
-
         if len(play_hist) <= 3:
             self.opponent_tiles = all_tiles.copy() - set(self.tiles)
             self.friend_tiles = self.opponent_tiles.copy()
@@ -48,7 +43,8 @@ class MinMaxPlyer(Player):
         playable_tiles = \
             [tile for tile in self.tiles 
              if tile[0] in board_extremes 
-             or tile[1] in board_extremes]
+             or tile[1] in board_extremes] \
+            if len(board_extremes) > 0 else self.tiles
 
         if len(playable_tiles) == 0:
             return 1, None
@@ -63,7 +59,7 @@ class MinMaxPlyer(Player):
         normals = s.least_choices(normals)
         normals = s.minmax(normals)
 
-        normals = s.most_common(self.tiles, normals, board_extremes)
+        normals = s.most_common(self.tiles, normals)
         normals = s.greedy(normals)
 
         best_play = normals[0]
@@ -71,8 +67,8 @@ class MinMaxPlyer(Player):
 
 # Função que define o nome da dupla:
 def pair_name():
-    return "algum nome" # Defina aqui o nome da sua dupla
+    return "Placeholder !!!" # Defina aqui o nome da sua dupla
 
 # Função que cria a dupla:
 def create_pair():
-    return (MinMaxPlyer(), MinMaxPlyer()) # Defina aqui a dupla de jogadores. Deve ser uma tupla com dois jogadores.	
+    return (MinMaxPlyer(0, "Metang", "img/Metang.webp"), MinMaxPlyer(1, "Bulbasaur", "img/Bulbasaur.png")) # Defina aqui a dupla de jogadores. Deve ser uma tupla com dois jogadores.	

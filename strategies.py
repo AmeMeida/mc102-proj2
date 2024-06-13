@@ -44,12 +44,9 @@ def greedy(normals: list[Normal]):
 def friendly(normals: list[Normal], friend_tiles: list[tuple[int, int]]):
     for normal in normals:
         friend_normals = normalize(normal.responses, friend_tiles, normal.extremes)
-        
-
 
 def most_common(tiles: list[tuple[int, int]], 
-                playable_tiles: list[Normal],
-                extremes: tuple[int, int]):
+                normals: list[Normal]):
     numbers = {}
 
     for tile in tiles:
@@ -59,20 +56,15 @@ def most_common(tiles: list[tuple[int, int]],
             numbers[tile[1]] = numbers.get(tile[1], 0) + 1
 
     max_frequency = max(numbers.keys())
-    most_frequent = [number for number in numbers if numbers[number] >= max_frequency]
+    most_frequent = [number for number in numbers 
+                     if numbers[number] >= max_frequency]
 
-    best_normals = []
-
-    for normal in playable_tiles:
-        tile = normal.tile
-        if tile == None:
-            continue
-
-        for number in most_frequent:
-            if number in tile:
-                best_normals.append(normal)
+    best_normals = [normal for normal in normals 
+                    if normal.tile != None
+                    and normal.extremes[0] in most_frequent 
+                    or normal.extremes[1] in most_frequent]
 
     if len(best_normals) == 0:
-        best_normals = playable_tiles
+        best_normals = normals
 
     return best_normals
