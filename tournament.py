@@ -68,10 +68,10 @@ class Score:
 
 # Duplas do torneio			
 PAIRS = {
+		pair_name(): create_pair(),
         'Greedies': (GreedyPlayer(1, "Mr Burns", "img/Mr_Burns.jpg"), GreedyPlayer(2, "Mr Krabs", "img/Mr_Krabs.jpeg")), 
         'Mixed': (GreedyPlayer(3, "Scrooge McDuck", "img/Scrooge_McDuck.jpg"), DummyPlayer(4, "Homer_Simpson", "img/Homer_Simpson.png")), 
         'Dummies': (DummyPlayer(5, "Patrick Star", "img/Patrick_Star.jpeg"), DummyPlayer(6, "Philip Fry", "img/Philip_Fry.jpg")),
-		pair_name(): create_pair()
     }
 		
 # Inicializa pygame
