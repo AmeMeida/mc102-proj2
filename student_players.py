@@ -67,7 +67,7 @@ class MinMaxPlyer(Player):
 
 # Função que define o nome da dupla:
 def pair_name():
-    return "Placeholder !!!" # Defina aqui o nome da sua dupla
+    return "gabriela planas fa clube" # Defina aqui o nome da sua dupla
 
 # Função que cria a dupla:
 def create_pair():
