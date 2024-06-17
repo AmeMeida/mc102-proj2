@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 
 def get_extremes(extremes: tuple[int, int] | None, tile: tuple[int, int] | None):
+    """ Indica quais serão os novos extremos do tabuleiro após a jogada
+    """
+
     side = 0
 
     if not tile:
@@ -49,6 +52,11 @@ class Normal:
 
 def normalize(plays: list[tuple[int, int]], 
         responses: list[tuple[int, int]], extremes: tuple[int, int]) -> list[Normal]:
+    """ 
+    Representação formal de jogo de cada possibilidade de resposta
+    a cada jogada feita.
+    """
+
     normals: list[Normal] = []
     
     if len(plays) <= 0:

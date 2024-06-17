@@ -11,17 +11,16 @@ for i in range(0, 10):
 # Implemente neste arquivo seus jogadores
 class MinMaxPlyer(Player):
     opponent_tiles: set[tuple[int, int]]
-    friend_tiles: set[tuple[int, int]]
 
     def __init__(self, ra=0, name="Ninguém", image_path="img/none.jpg"):
         self.opponent_tiles = None
-        self.friend_tiles = None
         super().__init__(ra, name, image_path)
 
     def play(self, board_extremes, play_hist):
+        # caso base. como o construtor não é chamado, 
+        # reseta as informações da classe
         if len(play_hist) <= 3:
             self.opponent_tiles = all_tiles.copy() - set(self.tiles)
-            self.friend_tiles = self.opponent_tiles.copy()
 
         if len(play_hist) >= 3 and play_hist[-3][-1] == None:
             extremes = play_hist[-3][1]
@@ -30,15 +29,7 @@ class MinMaxPlyer(Player):
                 if extremes[0] in tile or extremes[1] in tile:
                     self.opponent_tiles.remove(tile)
 
-        if len(play_hist) >= 3 and play_hist[-2][-1] == None:
-            extremes = play_hist[-2][1]
-
-            for tile in list(self.friend_tiles):
-                if extremes[0] in tile or extremes[1] in tile:
-                    self.friend_tiles.remove(tile)
-
         self.opponent_tiles -= {tile[-1] for tile in play_hist}
-        self.friend_tiles -= {tile[-1] for tile in play_hist}
 
         playable_tiles = \
             [tile for tile in self.tiles 
@@ -49,11 +40,8 @@ class MinMaxPlyer(Player):
         if len(playable_tiles) == 0:
             return 1, None
         
-        normals = normalize(playable_tiles, list(self.opponent_tiles), board_extremes)
-
-        # for normal in normals:
-        #     new_extremes = get_extremes(board_extremes, normal.tile)
-        #     friend_normals = normalize(normal.responses, list(self.friend_tiles), new_extremes)
+        normals = normalize(playable_tiles, list(self.opponent_tiles),
+                            board_extremes)
 
         normals = s.isolate_doubles(normals)
         normals = s.least_choices(normals)
