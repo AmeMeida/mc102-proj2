@@ -1,4 +1,5 @@
 import argparse
+from tournament import run_tournament
 
 parser = argparse.ArgumentParser(description="Ganhe o torneio de dominó!")
 
@@ -20,24 +21,11 @@ parser.add_argument(
     help = "Velocidade (ms) de cada jogada",
 )
 
-parser.add_argument(
-    "--cli",
-    "-c",
-    action="store_true",
-    default = False,
-)
-
 # Função principal    
-def main(number_of_matches, speed, cli):
+def main(number_of_matches, speed):
     # Começa o torneio
-
-    if cli:
-        from tournament_cli import run_tournament
-    else:
-        from tournament import run_tournament 
-
     run_tournament(number_of_matches, speed, 5 * speed)	
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    main(args.num_matches, args.speed, args.cli)
+    main(args.num_matches, args.speed)
